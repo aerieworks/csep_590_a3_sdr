@@ -3,7 +3,6 @@
 import argparse
 from struct import unpack
 from sys import stdin
-from time import sleep
 
 class SignalProcessor:
 
@@ -19,7 +18,7 @@ class SignalProcessor:
     'LS.LLSS.LLSS.LLSS.LLSS.LLSS.LLSS.LLSS.LLSS.LS.LS.LS.LS.LS.LLSLSS': 'Button D pressed.'
   }
 
-  def __init__(self, noise_threshold, print_values, print_counts, print_letters, print_words, continuous):
+  def __init__(self, noise_threshold, print_values, print_counts, print_letters, print_words):
     self.signal_count = 0
     self.noise_count = 0
     self.current_message = []
@@ -29,31 +28,26 @@ class SignalProcessor:
     self.print_counts = print_counts
     self.print_letters = print_letters
     self.print_words = print_words
-    self.is_continuous = continuous
 
   def process(self, source):
-    keep_going = True
     float_bytes = source.read(SignalProcessor.READ_CHUNK_SIZE)
-    while keep_going:
-      while len(float_bytes) >= 4:
-        float_count = len(float_bytes) / 4
-        unpack_format = str(float_count) + 'f'
-        values = unpack(unpack_format, float_bytes)
+    while len(float_bytes) >= 4:
+      float_count = len(float_bytes) / 4
+      unpack_format = str(float_count) + 'f'
+      values = unpack(unpack_format, float_bytes)
 
-        remainder_count = len(float_bytes) % 4
-        if remainder_count > 0:
-          remainder_bytes = float_bytes[-remainder_count:]
-        else:
-          remainder_bytes = ''
+      remainder_count = len(float_bytes) % 4
+      if remainder_count > 0:
+        remainder_bytes = float_bytes[-remainder_count:]
+      else:
+        remainder_bytes = ''
 
-        for value in values:
-          if self.print_values:
-            print value
-          self.handle_value(value)
+      for value in values:
+        if self.print_values:
+          print value
+        self.handle_value(value)
 
-        float_bytes = remainder_bytes + source.read(SignalProcessor.READ_CHUNK_SIZE)
-      keep_going = self.is_continuous
-      sleep(0.1)
+      float_bytes = remainder_bytes + source.read(SignalProcessor.READ_CHUNK_SIZE)
 
   def handle_value(self, value):
     clean_value = None
@@ -119,11 +113,10 @@ parser.add_argument('-a', '--values', action='store_true', dest='print_values', 
 parser.add_argument('-c', '--counts', action='store_true', dest='print_counts', help='Print consecutive counts of 0, 1 as we detect them.')
 parser.add_argument('-l', '--letters', action='store_true', dest='print_letters', help='Print long, short letters as we detect them.')
 parser.add_argument('-w', '--words', action='store_true', dest='print_words', help='Print words as we detect them.')
-parser.add_argument('-C', '--continuous', action='store_true', dest='continuous', help='Continue to watch the file for new input.')
 
 args = parser.parse_args()
 
-processor = SignalProcessor(args.noise_threshold[0], args.print_values, args.print_counts, args.print_letters, args.print_words, args.continuous)
+processor = SignalProcessor(args.noise_threshold[0], args.print_values, args.print_counts, args.print_letters, args.print_words)
 if args.filename == None:
   processor.process(stdin)
 else:

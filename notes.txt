@@ -1,0 +1,12 @@
+Button A pattern:
+LS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSLSLSS  LS  LS      LS  LS      LS  LS
+
+Button B pattern:
+LS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSS      LS  LLSLSS  LS  LS      LS  LS
+
+Button C pattern:
+LS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSS      LS  LS      LS  LLSLSS  LS  LS
+
+Button D pattern:
+LS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSS  LLSS      LS  LS      LS  LS      LS  LLSLSS
+
